@@ -1,7 +1,6 @@
 services:
   app:
     build: .
-    container_name: service-b-app
     restart: unless-stopped
     ports:
       - "3002:3002"
@@ -30,7 +29,6 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: service-b-mysql
     restart: unless-stopped
     ports:
       - "3307:3306"
