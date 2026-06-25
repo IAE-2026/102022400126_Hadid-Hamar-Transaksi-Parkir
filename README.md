@@ -32,7 +32,13 @@ Content-Type: application/json
 | `POST` | `/api/v1/transactions/{id}/pay` | Menyelesaikan pembayaran |
 | `POST` | `/api/v1/transactions/{id}` | Action gabungan (`TAP_OUT` / `PAYMENT_SUCCESS`) |
 
-Format respon mengikuti **Standard Integration Contract** (lihat `Context2.md`).
+Semua respons mengikuti **Standard Integration Contract** dengan bentuk konsisten:
+
+```json
+{ "status": "success | error", "message": "...", "data": {}, "errors": null }
+```
+
+Error level framework (`404` / `405` / `422` / `500`) juga otomatis dibungkus ke format yang sama.
 
 ### Contoh body POST `/api/v1/transactions`
 
@@ -133,6 +139,30 @@ php artisan key:generate
 # sesuaikan kredensial DB pada .env (DB_HOST, DB_DATABASE, dst.)
 php artisan migrate --seed
 php artisan serve --host=0.0.0.0 --port=3002
+```
+
+## Pengujian
+
+Test otomatis memakai SQLite in-memory, jadi **tidak butuh MySQL** dan bisa langsung dijalankan setelah clone:
+
+```bash
+composer install
+php artisan test
+```
+
+Cakupan test (`tests/Feature/TransactionApiTest.php`): penolakan tanpa `X-IAE-KEY` (401), key tidak valid (403), `GET` daftar transaksi (200 + wrapper), detail tidak ditemukan (404 + wrapper), `POST` membuat transaksi (201), path tak dikenal (404, bukan 405), dan method tidak diizinkan (405 + wrapper).
+
+### Smoke test cepat (setelah service jalan di port 3002)
+
+```bash
+# Tanpa key -> 401
+curl -i http://localhost:3002/api/v1/transactions
+
+# Dengan key -> 200
+curl -i -H "X-IAE-KEY: 102022400126" http://localhost:3002/api/v1/transactions
+
+# Path tak dikenal -> 404 (bukan 405)
+curl -i -H "X-IAE-KEY: 102022400126" http://localhost:3002/api/v1/tidak-ada
 ```
 
 ## Lihat juga

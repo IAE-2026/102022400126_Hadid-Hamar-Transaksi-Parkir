@@ -6,7 +6,9 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Middleware\RequireIaeApiKey;
 use Illuminate\Support\Facades\Route;
 
-Route::options('/{any}', fn () => response()->noContent())->where('any', '.*');
+// CORS preflight (OPTIONS) sudah ditangani global oleh App\Http\Middleware\CorsHeaders.
+// Route catch-all "OPTIONS /{any}" dihapus karena membuat setiap path tak dikenal
+// membalas 405 (Method Not Allowed) alih-alih 404 (Not Found) dan menutupi error asli.
 
 Route::get('/api-docs', [DocsController::class, 'swaggerUi']);
 Route::get('/api-docs/', [DocsController::class, 'swaggerUi']);
