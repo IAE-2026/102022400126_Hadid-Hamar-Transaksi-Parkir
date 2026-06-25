@@ -289,7 +289,7 @@ HTML;
 
     private function paths(): array
     {
-        return [
+        $paths = [
             '/api/v1/transactions' => [
                 'get' => [
                     'summary' => 'Melihat riwayat seluruh transaksi parkir',
@@ -349,6 +349,25 @@ HTML;
                 ],
             ],
         ];
+
+        // Deklarasikan setiap response sebagai application/json supaya Swagger
+        // mengirim header "Accept: application/json" (bukan */*) di curl.
+        foreach ($paths as &$methods) {
+            foreach ($methods as &$operation) {
+                foreach ($operation['responses'] as &$response) {
+                    if (! isset($response['content'])) {
+                        $response['content'] = [
+                            'application/json' => [
+                                'schema' => ['type' => 'object'],
+                            ],
+                        ];
+                    }
+                }
+            }
+        }
+        unset($methods, $operation, $response);
+
+        return $paths;
     }
 
     private function schemas(): array
