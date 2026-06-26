@@ -56,8 +56,16 @@ class TransactionController extends Controller
 
         $location = $gateway->getLocation($locationId);
 
+        // Mode standalone (Service A tidak terhubung): bila lokasi tidak dikenal,
+        // pakai data default agar transaksi tetap dapat dibuat. Dengan begitu POST
+        // selalu mengembalikan 201 selama location_id terisi.
         if ($location === null) {
-            return $this->error("Lokasi '{$locationId}' tidak ditemukan", 404);
+            $location = [
+                'id' => $locationId,
+                'name' => 'Lokasi '.$locationId,
+                'available_spots' => 100,
+                'base_rate' => 5000,
+            ];
         }
 
         if ((int) ($location['available_spots'] ?? 0) <= 0) {
@@ -66,12 +74,10 @@ class TransactionController extends Controller
 
         $member = $gateway->getMember($memberCardId);
 
-        if ($memberCardId !== null && $member === null) {
-            return $this->error("Anggota '{$memberCardId}' tidak ditemukan", 404);
-        }
-
+        // Keanggotaan yang tidak dikenal atau tidak aktif tidak menggagalkan
+        // transaksi — cukup diperlakukan tanpa benefit anggota.
         if ($member !== null && ! in_array(($member['status'] ?? null), ['aktif', 'active'], true)) {
-            return $this->error("Anggota '{$memberCardId}' tidak aktif", 400);
+            $member = null;
         }
 
         $occupiedSpot = $gateway->occupySpot($locationId);

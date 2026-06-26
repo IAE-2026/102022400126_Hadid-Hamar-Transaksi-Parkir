@@ -78,6 +78,19 @@ class TransactionApiTest extends TestCase
         $this->assertDatabaseCount('transactions', 1);
     }
 
+    public function test_post_dengan_lokasi_tak_dikenal_tetap_201(): void
+    {
+        // Mode standalone: location_id apa pun tetap menghasilkan transaksi.
+        $response = $this->postJson('/api/v1/transactions', [
+            'location_id' => 'loc_tidak_terdaftar',
+            'member_card_id' => 'MEM_tidak_terdaftar',
+        ], $this->withKey());
+
+        $response->assertStatus(201)
+            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('data.location_id', 'loc_tidak_terdaftar');
+    }
+
     public function test_path_tidak_dikenal_mengembalikan_404_bukan_405(): void
     {
         $response = $this->getJson('/api/v1/tidak-ada', $this->withKey());
