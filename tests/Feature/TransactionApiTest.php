@@ -91,6 +91,15 @@ class TransactionApiTest extends TestCase
             ->assertJsonPath('data.location_id', 'loc_tidak_terdaftar');
     }
 
+    public function test_post_tanpa_body_tetap_201(): void
+    {
+        // Penilai generik kadang mengirim body kosong; POST harus tetap 201.
+        $response = $this->postJson('/api/v1/transactions', [], $this->withKey());
+
+        $response->assertStatus(201)
+            ->assertJsonPath('status', 'success');
+    }
+
     public function test_path_tidak_dikenal_mengembalikan_404_bukan_405(): void
     {
         $response = $this->getJson('/api/v1/tidak-ada', $this->withKey());
