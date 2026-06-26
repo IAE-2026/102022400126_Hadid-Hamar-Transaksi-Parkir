@@ -52,14 +52,14 @@ class DocsController extends Controller
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
   <style>
     :root {
-      --bg: #171c1f;
-      --panel: #1d252b;
-      --panel-soft: #202b33;
-      --line: #34424b;
-      --text: #f2f6fa;
-      --muted: #b7c2cc;
-      --green: #00c781;
-      --blue: #49a3ff;
+      --bg: #f4f6f8;
+      --panel: #ffffff;
+      --panel-soft: #f8fafc;
+      --line: #e3e8ee;
+      --text: #1b2733;
+      --muted: #5b6b7b;
+      --green: #00a36c;
+      --blue: #2f6fed;
     }
 
     html,
@@ -83,13 +83,17 @@ class DocsController extends Controller
     }
 
     .swagger-ui .wrapper {
-      max-width: none;
-      padding: 0 64px;
+      max-width: 1100px;
+      padding: 0 28px;
     }
 
     .swagger-ui .information-container {
-      background: var(--bg);
-      padding: 56px 0 44px;
+      background: linear-gradient(135deg, #ffffff 0%, #eefaf4 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 32px 32px 26px;
+      margin-top: 28px;
+      box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
     }
 
     .swagger-ui .info {
@@ -104,9 +108,10 @@ class DocsController extends Controller
     }
 
     .swagger-ui .info .title {
-      font-size: 46px;
-      font-weight: 700;
-      letter-spacing: 0;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #0f172a;
     }
 
     .swagger-ui .info .title small {
@@ -174,9 +179,10 @@ class DocsController extends Controller
     }
 
     .swagger-ui .opblock {
-      border-radius: 4px;
-      box-shadow: none;
-      margin: 0 0 18px;
+      border-radius: 10px;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+      margin: 0 0 14px;
+      border: 1px solid var(--line);
     }
 
     .swagger-ui .opblock .opblock-summary {
@@ -236,9 +242,16 @@ class DocsController extends Controller
     .swagger-ui input[type=text],
     .swagger-ui input[type=password],
     .swagger-ui input[type=email] {
-      background: #10161a;
-      border-color: var(--line);
+      background: #ffffff;
+      border-color: #cfd8e3;
       color: var(--text);
+      border-radius: 8px;
+    }
+
+    .swagger-ui .btn.execute {
+      background: var(--green);
+      border-color: var(--green);
+      border-radius: 8px;
     }
 
     .swagger-ui .model-box,
